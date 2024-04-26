@@ -6,12 +6,6 @@ Ascii-Art-Web is a web application that allows users to convert their text input
 
 Ascii-Art-Web provides a user-friendly interface for generating ASCII art representations from text input. Users can choose from a range of banner styles to customize the appearance of their ASCII art.
 
-## Authors
-
-Amir Iqbal [aiqbal]
-
-Hatham Radhi [hradhi]
-
 ## Usage
 
 To run the Ascii-Art-Web application:

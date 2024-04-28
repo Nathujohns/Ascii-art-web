@@ -1,21 +1,22 @@
 package main
 
 import (
-	"ascii/src/server"
 	"fmt"
 	"log"
 	"net/http"
+
+	"ascii/src/server"
 )
 
 func main() {
-	fmt.Print("Server running on http://localhost:8080 \nTo stop the server press Ctrl+C")
+	serverAddress := ":8080" // Define server port as a variable
+	fmt.Println("Server is active at http://localhost" + serverAddress + ". Press Ctrl+C to terminate.")
 
-	// Register the request handlers
-	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets/"))))
-	http.HandleFunc("/", server.MainHandler)
-	http.HandleFunc("/ascii-art", server.ResultHandler)
+	// Setting up the server handlers
+	http.HandleFunc("/", server.HomePageHandler)          // Updated to HomePageHandler
+	http.HandleFunc("/ascii-art", server.ASCIIArtHandler) // Updated to ASCIIArtHandler
+	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("assets"))))
 
-	//Start the http server
-	log.Fatal(http.ListenAndServe(":8080", nil))
-
+	// Start the HTTP server and log if there's a fatal error
+	log.Fatal(http.ListenAndServe(serverAddress, nil))
 }

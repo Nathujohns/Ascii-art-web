@@ -6,44 +6,42 @@ import (
 	"strings"
 )
 
+// GetAsciiLine reads a specific line number from a file, where line numbering starts from 0.
 func GetAsciiLine(filename string, num int) (string, error) {
-	file, e := os.Open(filename)
-	if e != nil {
-		return "", e
+	file, err := os.Open(filename)
+	if err != nil {
+		return "", err
 	}
+	defer file.Close()
+
 	scanner := bufio.NewScanner(file)
 	lineNum := 0
-	line := ""
 	for scanner.Scan() {
 		if lineNum == num {
-			line = scanner.Text()
+			return scanner.Text(), nil
 		}
 		lineNum++
 	}
-	return line,nil
+	return "", os.ErrNotExist // or a custom error indicating the line number was not found
 }
 
-func AsciiArt(input, filename string) (string, error) {
+// AsciiArt generates ASCII art from the input text using a specified font stored in a file.
+func AsciiArt(input, fontName string) (string, error) {
+	banner := "banners/" + fontName + ".txt"
+	var result strings.Builder
 
-	banner := "banners/" + filename + ".txt"
-	line := ""
-	result := "\n"
-
-	args := strings.Split(input, "\n")
-	for _, word := range args {
+	lines := strings.Split(input, "\n")
+	for _, word := range lines {
 		for i := 0; i < 8; i++ {
 			for _, letter := range word {
 				asciiLine, err := GetAsciiLine(banner, 1+int(letter-' ')*9+i)
-				if err != nil { 
+				if err != nil {
 					return "", err
 				}
-
-				result += asciiLine
+				result.WriteString(asciiLine)
 			}
-			line += "\n"
-			result += line
-			line = ""
+			result.WriteString("\n")
 		}
 	}
-	return result, nil
+	return result.String(), nil
 }
